@@ -21,6 +21,10 @@ RUN echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/d
 RUN apt-get update
 RUN apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
+# Create an admin user with sudo privlidges; it will be created at run-time
+# RUN useradd -m admin && echo 'admin ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/admin
+RUN echo 'admin ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/admin
+
 # Download and install Conda
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh && \
     bash miniconda.sh -b -p /opt/conda && \
@@ -34,6 +38,7 @@ RUN conda update -n base -c defaults conda
 
 COPY environment.yml .
 RUN conda env create -f environment.yml
+
 
 # Activate the Conda environment
 SHELL ["conda", "run", "-n", "jupyterenv", "/bin/bash", "-c"]
@@ -52,10 +57,19 @@ RUN apt-get autoremove -y && \
 
 # Setup jupyterhub configuration
 COPY ./config/jupyterhub_config.py /etc/jupyterhub/
+# Default user information for newly created users
+COPY ./config/README.txt /etc/skel/
 
-# Create an admin user with sudo privlidges
-# RUN useradd -m admin && echo 'admin ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/admin
-RUN echo 'admin ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/admin
+# *** Need to user useradd (not adduser) to create the new users ***
+# useradd will use /etc/skel
+# Need to figure out how to do group addition
+
+# Create a script to be run on creation of every user; keep it in etc
+# so it persists, and symlink from the correct location.
+#COPY ./config/adduser.local /etc/
+#RUN chmod 774 /etc/adduser.local
+#RUN ln -s /etc/adduser.local /usr/local/sbin/adduser.local
+
 
 # Expose the Jupyter Notebook port
 EXPOSE 8000
