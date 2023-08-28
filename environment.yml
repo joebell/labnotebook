@@ -1,0 +1,12 @@
+name: jupyterenv
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.11
+  - jupyterhub
+  - jupyterlab
+  - notebook
+  - nb_conda
+  - nb_conda_kernels
+
