@@ -4,7 +4,7 @@ channels:
   - conda-forge
 dependencies:
   - python=3.11
-  - jupyterhub
+  - jupyterhub=4.0.2
   - jupyterlab
   - notebook
   - nb_conda

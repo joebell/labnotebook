@@ -184,7 +184,10 @@ import subprocess
 def create_system_user(spawner):
     """Hook to create system user before spawning notebook. Required since NativeAuthenticator does not create users."""
     username = spawner.user.name
-    subprocess.check_call(['useradd', username, "-m"])
+    try:
+        subprocess.check_call(['useradd', username, "-m"])
+    except:
+        print('*** Error on useradd ***')
 
 c.Spawner.pre_spawn_hook = create_system_user
 
@@ -303,7 +306,7 @@ c.Spawner.pre_spawn_hook = create_system_user
 
 ## url for the database. e.g. `sqlite:///jupyterhub.sqlite`
 #  Default: 'sqlite:///jupyterhub.sqlite'
-# c.JupyterHub.db_url = 'sqlite:///jupyterhub.sqlite'
+c.JupyterHub.db_url = 'sqlite:////etc/jupyterhub/jupyterhub.sqlite'
 
 ## log all database transactions. This has A LOT of output
 #  Default: False
