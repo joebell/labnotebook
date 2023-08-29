@@ -185,9 +185,16 @@ def create_system_user(spawner):
     """Hook to create system user before spawning notebook. Required since NativeAuthenticator does not create users."""
     username = spawner.user.name
     try:
+        print('*** Adding user ***')
+        # Add the user
         subprocess.check_call(['useradd', username, "-m"])
-    except:
+        print('*** Added user ***')
+        # Run a script to setup the user account
+        subprocess.check_call(['/etc/adduser.sh', username])
+        print('*** Completed script ***')
+    except Exception as e:
         print('*** Error on useradd ***')
+        print(e)
 
 c.Spawner.pre_spawn_hook = create_system_user
 
