@@ -10,5 +10,5 @@ To Do:
 - [x] Upgrade Jupyterhub to 4.0
 - [ ] Install and integrate matlab [Should MATLAB kernel be in a sub-Docker?]
 - [ ] Test Dockernel
-- [ ] SSL encryption
+- [x] SSL encryption: Working!
 - [x] Test GPU support: Working! Requires nvidia-container-toolkit installed on host. Base image includes nvidia-smi to verify.
