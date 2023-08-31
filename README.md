@@ -11,4 +11,4 @@ To Do:
 - [ ] Install and integrate matlab [Should MATLAB kernel be in a sub-Docker?]
 - [ ] Test Dockernel
 - [ ] SSL encryption
-- [ ] Test GPU support
+- [x] Test GPU support: Working! Requires nvidia-container-toolkit installed on host. Base image includes nvidia-smi to verify.
