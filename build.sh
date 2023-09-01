@@ -1,6 +1,6 @@
 #!/bin/bash
 
-docker build -t labnotebook:latest .
+docker build -f ./labnotebook.dockerfile -t labnotebook:latest .
 
 # Remove old volumes
 docker ps -a --filter "volume=notebook-homedirs" | xargs docker rm -f

@@ -185,13 +185,10 @@ def create_system_user(spawner):
     """Hook to create system user before spawning notebook. Required since NativeAuthenticator does not create users."""
     username = spawner.user.name
     try:
-        print('*** Adding user ***')
         # Add the user
         subprocess.check_call(['useradd', username, "-m"])
-        print('*** Added user ***')
         # Run a script to setup the user account
         subprocess.check_call(['/etc/adduser.sh', username])
-        print('*** Completed script ***')
     except Exception as e:
         print('*** Error on useradd ***')
         print(e)
@@ -797,14 +794,16 @@ c.JupyterHub.port = 8000
 #          When setting this, you should also set ssl_key
 #  Default: ''
 # c.JupyterHub.ssl_cert = ''
-c.JupyterHub.ssl_cert = '/etc/jupyterhub/ssl/my_cert.crt'
+
+#c.JupyterHub.ssl_cert = '/etc/jupyterhub/ssl/my_cert.crt'
 
 ## Path to SSL key file for the public facing interface of the proxy
 #  
 #          When setting this, you should also set ssl_cert
 #  Default: ''
 # c.JupyterHub.ssl_key = ''
-c.JupyterHub.ssl_key = '/etc/jupyterhub/ssl/my_key.key'
+
+#c.JupyterHub.ssl_key = '/etc/jupyterhub/ssl/my_key.key'
 
 ## Host to send statsd metrics to. An empty string (the default) disables sending
 #  metrics.
