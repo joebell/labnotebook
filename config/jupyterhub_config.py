@@ -795,7 +795,7 @@ c.JupyterHub.port = 8000
 #  Default: ''
 # c.JupyterHub.ssl_cert = ''
 
-#c.JupyterHub.ssl_cert = '/etc/jupyterhub/ssl/my_cert.crt'
+c.JupyterHub.ssl_cert = '/etc/jupyterhub/ssl/my_cert.crt'
 
 ## Path to SSL key file for the public facing interface of the proxy
 #  
@@ -803,7 +803,7 @@ c.JupyterHub.port = 8000
 #  Default: ''
 # c.JupyterHub.ssl_key = ''
 
-#c.JupyterHub.ssl_key = '/etc/jupyterhub/ssl/my_key.key'
+c.JupyterHub.ssl_key = '/etc/jupyterhub/ssl/my_key.key'
 
 ## Host to send statsd metrics to. An empty string (the default) disables sending
 #  metrics.
