@@ -38,14 +38,15 @@ COPY environment.yml /etc
 RUN conda env create -f /etc/environment.yml
 
 # Activate the Conda environment
-SHELL ["conda", "run", "-n", "jupyterenv", "/bin/bash", "-c"]
+# SHELL ["conda", "run", "-n", "jupyterenv", "/bin/bash", "-c"]
+# ENTRYPOINT ["conda", "run", "-n", "jupyterenv", "/bin/bash","-c"]
 
 # Install the native authenticator
-RUN pip install jupyterhub-nativeauthenticator
+# RUN pip install jupyterhub-nativeauthenticator
 
 # Install dockernel. Note that this is not from the package maintainer; this version has a needed bug fix
 # Dockernel will be used to help install kernels that run in docker containers
-RUN pip install git+https://github.com/tompccs/dockernel.git
+# RUN pip install git+https://github.com/tompccs/dockernel.git
 
 # Clean up
 RUN apt-get autoremove -y && \
@@ -54,8 +55,9 @@ RUN apt-get autoremove -y && \
 
 # Copy everything from the build directory for reference
 COPY . /build
+RUN chmod -R 775 /build
 
-SHELL ["/bin/bash", "-c"]
+# SHELL ["/bin/bash", "-c"]
 
 # Setup jupyterhub configuration
 RUN mkdir /etc/jupyterhub
@@ -67,9 +69,16 @@ RUN chmod 774 /build/config/adduser.sh
 
 # Expose the Jupyter Notebook port
 EXPOSE 8000
+# Expose ports for kernel communication
+# EXPOSE 49152-65535
 
 # Activate the conda environment
 ENV PATH /opt/conda/envs/jupyterenv/bin:$PATH
-SHELL ["conda", "run", "-n", "jupyterenv", "/bin/bash", "-c"]
-#CMD ["/bin/bash"]
-CMD ["jupyterhub","-f","/etc/jupyterhub/jupyterhub_config.py"]
+
+# SHELL ["conda", "run", "-n", "jupyterenv", "/bin/bash", "-c"]
+# CMD ["/bin/bash"]
+# RUN /sbin/init
+#CMD ["/sbin/init && exec /bin/bash"]
+#CMD ["jupyterhub","-f","/etc/jupyterhub/jupyterhub_config.py"]
+
+CMD ["/build/startserver.sh"]

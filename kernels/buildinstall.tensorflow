@@ -1,0 +1,4 @@
+#conda activate jupyterenv
+docker build --tag tensorflow-2.13-gpu:latest - < tensorflow.dockerfile
+/opt/conda/envs/jupyterenv/bin/dockernel install tensorflow-2.13-gpu:latest --name TensorFlow-2.13-GPU
+

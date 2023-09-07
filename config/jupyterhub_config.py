@@ -1109,7 +1109,7 @@ c.JupyterHub.ssl_key = '/etc/jupyterhub/ssl/my_key.key'
 #      as '' was interpreted as 'unspecified',
 #      which used the subprocesses' own default, itself usually '127.0.0.1'.
 #  Default: '127.0.0.1'
-# c.Spawner.ip = '127.0.0.1'
+# c.Spawner.ip = '0.0.0.0'
 
 ## Minimum number of bytes a single-user notebook server is guaranteed to have
 #  available.
