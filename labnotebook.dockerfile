@@ -9,11 +9,14 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Update and upgrade packages
 RUN apt-get update && apt-get upgrade -y
 
-# Install python, pip, wget, git
+# Install python, pip, wget, git, vim, sudo
 RUN apt-get install -y python3.11 python3-pip wget git ca-certificates curl gnupg vim sudo
 
+# Install ACL
+RUN apt-get update
+RUN apt-get install -y acl
 
-# Install docker (in-docker) to generate kernel containers
+# Install docker (in the container) to generate kernel containers
 RUN install -m 0755 -d /etc/apt/keyrings
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 RUN chmod a+r /etc/apt/keyrings/docker.gpg
@@ -21,7 +24,7 @@ RUN echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/d
 RUN apt-get update
 RUN apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-# Create an admin user with sudo privlidges; it will be created at run-time
+# Give an admin user with sudo privlidges; it will be created at run-time
 RUN echo 'admin ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/admin
 
 # Download and install Conda
@@ -37,17 +40,6 @@ RUN conda update -n base -c defaults conda
 COPY environment.yml /etc
 RUN conda env create -f /etc/environment.yml
 
-# Activate the Conda environment
-# SHELL ["conda", "run", "-n", "jupyterenv", "/bin/bash", "-c"]
-# ENTRYPOINT ["conda", "run", "-n", "jupyterenv", "/bin/bash","-c"]
-
-# Install the native authenticator
-# RUN pip install jupyterhub-nativeauthenticator
-
-# Install dockernel. Note that this is not from the package maintainer; this version has a needed bug fix
-# Dockernel will be used to help install kernels that run in docker containers
-# RUN pip install git+https://github.com/tompccs/dockernel.git
-
 # Clean up
 RUN apt-get autoremove -y && \
     apt-get clean && \
@@ -57,22 +49,27 @@ RUN apt-get autoremove -y && \
 COPY . /build
 RUN chmod -R 775 /build
 
-# SHELL ["/bin/bash", "-c"]
-
 # Setup jupyterhub configuration
 RUN mkdir /etc/jupyterhub
 RUN ln -s /build/config/jupyterhub_config.py /etc/jupyterhub/jupyterhub_config.py
+
 # Default user information for newly created users
 RUN ln -s /build/config/adduser.sh /etc/adduser.sh
 RUN chmod 774 /build/config/adduser.sh
-# The script adduser.sh will be run whenever a new jupyter user is created
+# Setup default groups and permission
+RUN groupadd lab
+RUN mkdir /home/share 
+RUN chown -R :lab /home && chmod -R 755 /home
+RUN chmod g+s /home
+RUN chown -R :lab /home/share && chmod -R 775 /home/share
+RUN chmod g+s /home/share
+RUN setfacl -Rdm g:lab:rwx /home/share
+
 
 # Expose the Jupyter Notebook port
 EXPOSE 8000
-# Expose ports for kernel communication
-# EXPOSE 49152-65535
 
-# Activate the conda environment
+# Activate the conda environment on the PATH
 ENV PATH /opt/conda/envs/jupyterenv/bin:$PATH
 
 # SHELL ["conda", "run", "-n", "jupyterenv", "/bin/bash", "-c"]

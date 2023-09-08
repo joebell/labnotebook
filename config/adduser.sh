@@ -10,4 +10,10 @@ echo '******** adduser.sh **********'
 echo $USERNAME
 # Add every created user to the docker group
 usermod -aG docker $USERNAME
+usermod -aG lab $USERNAME
+
+# Adjust home directory permissions to ensure lab group has r+x
+chown -R :lab /home/$USERNAME
+chmod -R 755 /home/$USERNAME
+chmod g+s /home/$USERNAME
 ln -s /build/config/README.txt /home/$USERNAME/README.txt
