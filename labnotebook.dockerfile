@@ -52,6 +52,12 @@ RUN chmod -R 775 /build
 # Setup jupyterhub configuration
 RUN mkdir /etc/jupyterhub
 RUN ln -s /build/config/jupyterhub_config.py /etc/jupyterhub/jupyterhub_config.py
+# Create self-signed SSL certificates for jupyterhub, ideally these are replaced
+# at run-time with externally signed certs.
+RUN mkdir /etc/jupyterhub/ssl
+RUN openssl req -x509 -nodes -newkey rsa:2048 -keyout /etc/jupyterhub/ssl/my_key.key \
+    -out /etc/jupyterhub/ssl/my_cert.crt -days 365 \
+    -subj "/C=US/ST=State/L=City/O=Organization/CN=example.com"
 
 # Default user information for newly created users
 RUN ln -s /build/config/adduser.sh /etc/adduser.sh
