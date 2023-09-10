@@ -38,8 +38,8 @@ docker run -it \
     -e "USE_GPU=$USE_GPU" \
     $gpu_option \
     --network=host \
-    -v notebook-homedirs:/home \
-    -v notebook-etc:/etc \
+    -v labnotebook-homedirs:/home \
+    -v labnotebook-etc:/etc \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -e "USE_SSL=$USE_SSL" \
     $ssl_cert_option \

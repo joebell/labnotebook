@@ -3,12 +3,10 @@
 docker build -f ./labnotebook.dockerfile -t labnotebook:latest .
 
 # Remove old volumes
-docker ps -a --filter "volume=notebook-homedirs" | xargs docker rm -f
-docker volume rm -f notebook-homedirs
-docker volume rm -f notebook-etc
-docker volume rm -f notebook-docker
+docker ps -a --filter "volume=labnotebook-homedirs" | xargs docker rm -f
+docker volume rm -f labnotebook-homedirs
+docker volume rm -f labnotebook-etc
 
 # Create new volumes
-docker volume create notebook-homedirs
-docker volume create notebook-etc
-docker volume create notebook-docker
+docker volume create labnotebook-homedirs
+docker volume create labnotebook-etc
