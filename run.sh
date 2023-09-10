@@ -34,12 +34,17 @@ else
 fi
 
 
+#    -v labnotebook-etc:/etc \
+#    -v labnotebook-passwd:/etc/passwd \
+#    -v labnotebook-shadow:/etc/shadow \
+#    -v labnotebook-group:/etc/group \
+#    -v labnotebook-hubdatabase:/etc/jupyterhub/jupyterhub.sqlite \
 docker run -it \
     -e "USE_GPU=$USE_GPU" \
     $gpu_option \
     --network=host \
-    -v notebook-homedirs:/home \
-    -v notebook-etc:/etc \
+    -v labnotebook-homedirs:/home \
+    -v labnotebook-authdata:/etc/passwd \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -e "USE_SSL=$USE_SSL" \
     $ssl_cert_option \
