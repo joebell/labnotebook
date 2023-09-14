@@ -13,8 +13,7 @@ dependencies:
   - pip:
     - jupyterhub-nativeauthenticator
     - git+https://github.com/joebell/dockernel.git
-      #    - lxml # Required for jupyter-matlab-proxy
-      #    - jupyter-matlab-proxy
+    - jupyter-matlab-proxy
       #    - matlabengine
       #    - matlab_kernel
 

@@ -22,7 +22,7 @@ RUN add-apt-repository ppa:deadsnakes/ppa -y
 RUN apt-get update && apt-get upgrade -y
 
 # Install python, pip, wget, git, vim, sudo, lxml dependencies
-RUN apt-get install -y python3.10 python3-pip wget git ca-certificates curl gnupg vim sudo python3-lxml
+RUN apt-get install -y python3.10 python3-pip wget git ca-certificates curl gnupg vim sudo python3-lxml libxslt1-dev
 
 # Install ACL
 RUN apt-get update
@@ -41,8 +41,8 @@ RUN echo 'admin ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/admin
 
 # Download and install MATLAB
 #
-ARG MATLAB_RELEASE=r2023a
-ARG MATLAB_INSTALL_LOCATION=/opt/matlab/r2023a
+ARG MATLAB_RELEASE=R2023a
+ARG MATLAB_INSTALL_LOCATION=/opt/matlab/R2023a
 ARG MATLAB_PRODUCT_LIST=MATLAB
 RUN apt-get install -y ca-certificates libasound2 libc6 libcairo2 libcairo-gobject2 libcap2 libcrypt1 libcrypt-dev libcups2 libdrm2 libdw1 libgbm1 libgdk-pixbuf2.0-0 libgl1 libglib2.0-0 libgomp1 libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 libgtk-3-0 libice6 libnspr4 libnss3 libodbc1 libpam0g libpango-1.0-0 libpangocairo-1.0-0 libpangoft2-1.0-0 libsndfile1 libsystemd0 libuuid1 libwayland-client0 libxcomposite1 libxcursor1 libxdamage1 libxfixes3 libxft2 libxinerama1 libxrandr2 libxt6 libxtst6 libxxf86vm1 linux-libc-dev locales locales-all make net-tools odbcinst1debian2 procps sudo unzip wget zlib1g xvfb
 RUN wget -q https://www.mathworks.com/mpm/glnxa64/mpm \ 
@@ -54,6 +54,7 @@ RUN wget -q https://www.mathworks.com/mpm/glnxa64/mpm \
     || (echo "MPM Installation Failure. See below for more information:" && cat /tmp/mathworks_root.log && false) \
     && rm -f mpm /tmp/mathworks_root.log \
     && ln -s ${MATLAB_INSTALL_LOCATION}/bin/matlab /usr/local/bin/matlab
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/matlab/R2023a/bin/glnxa64
 
 # Download and install Conda
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh && \
