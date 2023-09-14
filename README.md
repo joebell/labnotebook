@@ -56,12 +56,14 @@ Once analysis for a publication is finished and you can create a stand-alone con
 
 ## Frequenty Asked Questions:
 
-**Q:** What system does the JupyterHub shell provide access to? 
+### What system does the JupyterHub shell provide access to? 
 
-**A:** This shell is on the containerized system inside the labnotebook Docker container. Users on this system do not (by default) have login access on the parent system, and do not have home directories on the parent system.
+This shell is on the containerized system inside the labnotebook Docker container. Users on this system do not (by default) have login access on the parent system, and do not have home directories on the parent system.
 
-- Where is my data? 
-    User home directories and persistent configuration are stored in Docker named volumes called labnotebook-homedirs and labnotebook-etc. Backing up these two volumes will allow for complete restoration of your system state. These volumes are mounted into /home and /etc, respectively. They are also mounted into the compute kernels to allow the kernel to have access to user data and code.
+### Where is my data? 
+
+User home directories and persistent configuration are stored in Docker named volumes called labnotebook-homedirs and labnotebook-etc. Backing up these two volumes will allow for complete restoration of your system state. These volumes are mounted into /home and /etc, respectively. They are also mounted into the compute kernels to allow the kernel to have access to user data and code.
+
 - How do I install new software in the LabNotebook system?
     In short, you shouldn't. Because the system is in a Docker container, new software packages (with apt-get or pip) will not persist if the container is shutdown and restarted. Instead, create a new kernel container that includes the software you'd like to use in your computation. This ensures that your system remains documented and reproducible.
 
