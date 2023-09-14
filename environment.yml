@@ -3,7 +3,7 @@ channels:
   - defaults
   - conda-forge
 dependencies:
-  - python=3.11
+  - python=3.10
   - pip=20.2.4
   - jupyterhub=4.0.2
   - jupyterlab
@@ -13,7 +13,10 @@ dependencies:
   - pip:
     - jupyterhub-nativeauthenticator
     - git+https://github.com/joebell/dockernel.git
-    - jupyter-matlab-proxy
+      #    - lxml # Required for jupyter-matlab-proxy
+      #    - jupyter-matlab-proxy
+      #    - matlabengine
+      #    - matlab_kernel
 
-###
+####
 
