@@ -4,10 +4,6 @@
 ssl_cert="/etc/ssl/gait_mednet_ucla_edu.pem"
 ssl_key="/etc/ssl/private/gait.mednet.ucla.edu.key"
 
-# Place path to MATLAB license here
-matlab_license=""
-
-
 
 # Check if either ssl_cert or ssl_key is empty
 if [ -z "$ssl_cert" ] || [ -z "$ssl_key" ]; then
@@ -46,4 +42,3 @@ docker run -it \
     $ssl_key_option \
     labnotebook:latest
 
-#docker-compose up

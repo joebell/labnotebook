@@ -36,9 +36,9 @@ You should configure SSL certificates to allow users to authenticate the server.
 - Run build.sh to create the container (and container volumes to store data)
 - Run run.sh to run the service
 - Navigate to https://[your.ip.address]:8000 
-- Click the 'Signup' link to create a new user: the first user must be named `admin`. Set a password.
-- After creating the user, choose 'Login as Existing User' and login as the admin user. This will create the admin account, which will have administrative privliges in JupyterHub, and `sudo` privliges.
-- Subsequently new users may use the 'Signup' link to request an account and set a password. The `admin` user must approve their account via the 'Authorize Users' menu. See the [Native-Authenticator Documentation](https://native-authenticator.readthedocs.io/en/stable/quickstart.html#default-workflow) for details.
+- Click the 'Sign up to create a new user' link to create a new user: the first user must be named `admin`. Set a password.
+- After creating the user, choose 'Login with an existing user' and login as the admin user. This will create the admin account, which will have administrative privliges in JupyterHub, and `sudo` privliges.
+- Subsequently new users may use the 'Sign up' link to request an account and set a password. The `admin` user must approve their account via the 'Authorize Users' menu. See the [Native-Authenticator Documentation](https://native-authenticator.readthedocs.io/en/stable/quickstart.html#default-workflow) for details.
 
 ## Backing-up Data
 
@@ -64,11 +64,21 @@ This shell is on the containerized system inside the labnotebook Docker containe
 
 User home directories and persistent configuration are stored in Docker named volumes called labnotebook-homedirs and labnotebook-etc. Backing up these two volumes will allow for complete restoration of your system state. These volumes are mounted into /home and /etc, respectively. They are also mounted into the compute kernels to allow the kernel to have access to user data and code.
 
-- How do I install new software in the LabNotebook system?
-    In short, you shouldn't. Because the system is in a Docker container, new software packages (with apt-get or pip) will not persist if the container is shutdown and restarted. Instead, create a new kernel container that includes the software you'd like to use in your computation. This ensures that your system remains documented and reproducible.
+### How do I install new software in the LabNotebook system?
+
+In short, you shouldn't. Because the system is in a Docker container, new software packages (with apt-get or pip) will not persist if the container is shutdown and restarted. Instead, create a new kernel container that includes the software you'd like to use in your computation. This ensures that your system remains documented and reproducible.
+
+### Is this running Docker inside of a Docker container?
+
+Nah, the "outer" Docker container running the JupyterHub server and the "inner" containers running the compute kernels are sister-containers both running under the host's docker daemon. But because the compute kernels are launched from the JupyterHub server, it sort of <i>feels</i> like they are. People sometimes refer to this configuration as Docker-out-of-Docker (DooD).
+
+### I messed up my deployment and want to start over?
+
+Sure, just re-run build.sh and this will create a fresh deployment. (It will erase any data you've uploaded to it.)
 
 
-To Do:
+
+# To Do:
 
 - [x] Persist user database in Volumes
 - [x] Volume vs bind mount for home directories? (Prob volume bc users won't have access on the native host)

@@ -1,9 +1,13 @@
 # Configuration file for jupyterhub.
 
 import os, nativeauthenticator
+
 c.JupyterHub.template_paths = [f"{os.path.dirname(nativeauthenticator.__file__)}/templates/"]
 
 c = get_config()  #noqa
+
+# Set default shell
+c.JupyterHub.default_shell = "bash"
 
 #------------------------------------------------------------------------------
 # Application(SingletonConfigurable) configuration
@@ -186,7 +190,7 @@ def create_system_user(spawner):
     username = spawner.user.name
     try:
         # Add the user
-        subprocess.check_call(['useradd', username, "-m"])
+        subprocess.check_call(['useradd', '-s', '/bin/bash', username, "-m"])
         # Run a script to setup the user account
         subprocess.check_call(['/etc/adduser.sh', username])
     except Exception as e:
@@ -1075,7 +1079,7 @@ c.JupyterHub.ssl_key = '/etc/jupyterhub/ssl/my_key.key'
 #      allowing override of 'default' env variables,
 #      such as JUPYTERHUB_API_URL.
 #  Default: {}
-# c.Spawner.environment = {}
+c.Spawner.environment = {'SHELL': '/bin/bash'}
 
 ## Timeout (in seconds) before giving up on a spawned HTTP server
 #  

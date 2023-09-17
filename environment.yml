@@ -5,6 +5,7 @@ channels:
 dependencies:
   - python=3.10
   - pip=20.2.4
+  - nodejs=18.16.0
   - jupyterhub=4.0.2
   - jupyterlab
   - notebook
@@ -13,9 +14,10 @@ dependencies:
   - pip:
     - jupyterhub-nativeauthenticator
     - git+https://github.com/joebell/dockernel.git
-    - jupyter-matlab-proxy
-      #    - matlabengine
-      #    - matlab_kernel
+    - git+https://github.com/joebell/jupyter-matlab-proxy.git
+      #    - jupyter-matlab-proxy
+    - matlabengine
+    - matlab_kernel
 
-####
+#####
 

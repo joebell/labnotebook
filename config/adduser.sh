@@ -17,3 +17,12 @@ chown -R :lab /home/$USERNAME
 chmod -R 755 /home/$USERNAME
 chmod g+s /home/$USERNAME
 ln -s /build/config/README.txt /home/$USERNAME/README.txt
+
+# Init conda for users
+sudo -u $USERNAME /opt/conda/bin/conda init
+# Set the default environment
+echo "conda activate jupyterenv" >> /home/$USERNAME/.bashrc
+
+# Make sure the MATLAB env variable is set
+echo "export VARIANTmatlab=matlabLNU" >> /home/$USERNAME/.bashrc
+
