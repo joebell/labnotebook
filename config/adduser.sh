@@ -24,5 +24,6 @@ sudo -u $USERNAME /opt/conda/bin/conda init
 echo "conda activate jupyterenv" >> /home/$USERNAME/.bashrc
 
 # Make sure the MATLAB env variable is set
-echo "export VARIANTmatlab=matlabLNU" >> /home/$USERNAME/.bashrc
+# echo "export VARIANTmatlab=matlabLNU" >> /home/$USERNAME/.bashrc
+
 
