@@ -1,15 +1,11 @@
-# First, use the MATLAB image to get started with MATLAB
-FROM mathworks/matlab-deep-learning:r2023a
-# Set the library path
-ENV LD_LIBRARY_PATH=/opt/matlab/R2023a/bin/glnxa64:$LD_LIBRARY_PATH
+# Start from the Ubuntu 22.04 base
+FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
-USER root
-WORKDIR /
 
 # Install python, pip, wget, git, vim, sudo, lxml dependencies, acl
 RUN apt-get update
-RUN apt-get install -y python3.10 python3-pip wget git ca-certificates curl gnupg vim sudo python3-lxml libxslt1-dev acl rustc cargo
+RUN apt-get install -y python3.10 python3-pip wget git ca-certificates curl gnupg vim sudo acl
 
 # Install Docker to allow creation of compute kernels
 RUN install -m 0755 -d /etc/apt/keyrings
@@ -38,8 +34,6 @@ RUN conda init
 # Activate the conda environment on the PATH
 ENV PATH $PATH:/opt/conda/envs/jupyterenv/bin
 
-#RUN pip install git+https://github.com/joebell/jupyter-matlab-proxy.git
-
 # Clean up
 RUN apt-get autoremove -y && \
     apt-get clean && \
@@ -51,8 +45,8 @@ RUN chmod -R 775 /build
 
 # Setup jupyterhub configuration
 RUN mkdir /etc/jupyterhub
-
 RUN ln -s /build/config/jupyterhub_config.py /etc/jupyterhub/jupyterhub_config.py
+
 # Create self-signed SSL certificates for jupyterhub, ideally these are replaced
 # at run-time with externally signed certs.
 RUN mkdir /etc/jupyterhub/ssl
@@ -79,12 +73,6 @@ EXPOSE 8000
 # Get JupyterHub to use bash in terminals
 ENV SHELL=/bin/bash
 
-# Set the path and license file for MATLAB
-ENV MLM_LICENSE_FILE=/build/config/matlab_license.lic
-# ENV VARIANTmatlab=matlabLNU
-
-# ENTRYPOINT - Don't override entrypoint;  MATLAB depends on it.
-#CMD ["/bin/bash"]
 ENTRYPOINT []
 CMD ["/build/startserver.sh"]
 

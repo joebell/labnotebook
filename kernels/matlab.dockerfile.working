@@ -1,7 +1,0 @@
-# Use the mathworks/matlab base image
-FROM labnotebook:latest
-
-EXPOSE 8888
-
-#CMD /opt/conda/envs/jupyterenv/bin/python -m jupyter_matlab_kernel -f $DOCKERNEL_CONNECTION_FILE
-CMD /opt/conda/envs/jupyterenv/bin/python -m matlab_kernel -f $DOCKERNEL_CONNECTION_FILE

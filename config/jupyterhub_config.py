@@ -1079,7 +1079,7 @@ c.JupyterHub.ssl_key = '/etc/jupyterhub/ssl/my_key.key'
 #      allowing override of 'default' env variables,
 #      such as JUPYTERHUB_API_URL.
 #  Default: {}
-c.Spawner.environment = {'MLM_LICENSE_FILE': '/build/config/matlab_license.lic'}
+# c.Spawner.environment = {}
 
 ## Timeout (in seconds) before giving up on a spawned HTTP server
 #  
