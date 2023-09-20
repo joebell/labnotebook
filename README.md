@@ -105,9 +105,9 @@ Sure, just re-run build.sh and this will create a fresh deployment. (It will era
 - [x] Symlink /home/shared from /home/$USER/shared
 - [ ] Improve dockernel kernel naming
 - [ ] Test alternate values for dockernel arguments (user as name, etc)
-- [ ] Add shared/readonly for data; writable by admin
+- [x] Add shared/readonly for data; writable by admin
 - [ ] Example image deploy
 - [ ] R-kernel
-- [ ] Figure out how admin can add users as sudoers and admins
+- [x] Figure out how admin can add users as sudoers and admins
 - [x] Clean up kernel locations, sample build files
 - [ ] Good way to get data in and stored
