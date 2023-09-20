@@ -1,4 +1,10 @@
 #!/bin/bash
+#
+# run.sh
+#
+# Starts the labnotebook system running.
+#
+#
 
 # Place paths to SSL cert and key here
 ssl_cert="/etc/ssl/gait_mednet_ucla_edu.pem"
@@ -32,6 +38,7 @@ fi
 # Get the Docker group ID in the host to match it in the container
 DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
 docker run -it \
+    --name labnotebook \
     -e "USE_GPU=$USE_GPU" \
     $gpu_option \
     --network=host \
