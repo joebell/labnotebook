@@ -6,12 +6,12 @@ dependencies:
   - python=3.10
   - pip=20.2.4
   - jupyterhub=4.0.2
-  - jupyterlab
-  - notebook
-  - nb_conda
-  - nb_conda_kernels
+  - jupyterlab=3.6.3
+  - notebook=6.5.4
+  - jupyterlab-git=0.42.0
+  - pandoc=2.12
   - pip:
-    - jupyterhub-nativeauthenticator
+    - jupyterhub-nativeauthenticator==1.2.0
     - git+https://github.com/joebell/dockernel.git
 
 ##########

@@ -6,9 +6,6 @@ c.JupyterHub.template_paths = [f"{os.path.dirname(nativeauthenticator.__file__)}
 
 c = get_config()  #noqa
 
-# Set default shell
-c.JupyterHub.default_shell = "bash"
-
 #------------------------------------------------------------------------------
 # Application(SingletonConfigurable) configuration
 #------------------------------------------------------------------------------
@@ -1034,7 +1031,7 @@ c.JupyterHub.ssl_key = '/etc/jupyterhub/ssl/my_key.key'
 #  - Start with `/notebooks` instead of `/tree` if `default_url` points to a notebook instead of a directory.
 #  - You can set this to `/lab` to have JupyterLab start by default, rather than Jupyter Notebook.
 #  Default: ''
-# c.Spawner.default_url = ''
+c.Spawner.default_url = '/lab/tree/home/{username}'
 
 ## Disable per-user configuration of single-user servers.
 #  
@@ -1162,7 +1159,7 @@ c.JupyterHub.ssl_key = '/etc/jupyterhub/ssl/my_key.key'
 #  Note that this does *not* prevent users from accessing files outside of this
 #  path! They can do so with many other means.
 #  Default: ''
-# c.Spawner.notebook_dir = ''
+c.Spawner.notebook_dir = '/'
 
 ## Allowed scopes for oauth tokens issued by this server's oauth client.
 #  

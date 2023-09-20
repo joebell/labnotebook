@@ -1,9 +1,15 @@
-# labnotebook
-A jupyterhub system designed to allow reproducible research with docker-ized kernels; all in a docker container.
+# Labnotebook
+A JupyterHub container designed to allow reproducible research with docker-ized kernels; all in a docker container.
 
 ## Purpose
 
 Jupyterhub is a fantastic way to create a shared computing environment for scientific data analysis in a lab, particularly when some of the users may not be technically skilled in a Unix environment. After configuring several of these systems I found I was resolving the same configuration problems multiple times, so elected to container-ize the system I developed into an easy to deploy Docker container. This deployment won't be ideal for everyone, but it's designed to meet the needs of small- to medium-sized labs that want to share data and code among users with varying technical sophistication. 
+
+## Why docker-ize Jupyter kernels?
+
+1. Portability - It's easy to share compute environments in containers.
+2. Version control - The compute environment can be documented and tracked, and changes undone.
+3. Non-python software - Pip and Conda are great, but docker containers can help port non-python tools.
 
 ## Who is this for?
 
@@ -13,10 +19,10 @@ It's not ideal for groups whose size (or compute needs) make sharing a single ho
 
 ## Features and choices
 
-- Fully docker-ized deployment. All you need for installation is Docker, SSL certificates, and (optionally) drivers for your GPU.
+- Fully docker-ized deployment. All you need for installation is Docker, SSL certificates, and (optionally) drivers for your GPU, and a MATLAB license.
 - An authentication system supervised by the `admin` user allows prospective new users to apply for access and choose their own password.
 - Users are given access to the Jupyterhub container but do not have login privliges on the host system.
-- To allow for easy reproducibility, Jupyter kernels can be run in user-managed conda environments, or in user-managed Docker containers (using the excellent Dockernel package).
+- To allow for easy reproducibility, Jupyter kernels are run in user-managed Docker containers (using the excellent Dockernel package).
 - Kernel containers are sibling-containers, in a Docker-out-of-Docker (DooD) configuration.
 - Full support for NVIDIA GPUs in compute kernels.
 - By default users have read-only access to all other users' home directories.
@@ -62,11 +68,17 @@ This shell is on the containerized system inside the labnotebook Docker containe
 
 ### Where is my data? 
 
-User home directories and persistent configuration are stored in Docker named volumes called labnotebook-homedirs and labnotebook-etc. Backing up these two volumes will allow for complete restoration of your system state. These volumes are mounted into /home and /etc, respectively. They are also mounted into the compute kernels to allow the kernel to have access to user data and code.
+User home directories and persistent configuration are stored in Docker named volumes called labnotebook-homedirs and labnotebook-etc. Backing up these two volumes will allow for complete restoration of your system state. These volumes are mounted into /home and /etc, respectively. For normal use it generally makes sense to mount the home directories into the kernel containers so the compute kernels can access data.
 
 ### How do I install new software in the LabNotebook system?
 
-In short, you shouldn't. Because the system is in a Docker container, new software packages (with apt-get or pip) will not persist if the container is shutdown and restarted. Instead, create a new kernel container that includes the software you'd like to use in your computation. This ensures that your system remains documented and reproducible.
+In short, you shouldn't install it in the base system. Because the system is in a Docker container, new software packages (with apt, conda, or pip) will not persist if the container is shutdown and restarted. Instead, create a new kernel container that includes the software you'd like to use in your computation. This ensures that your system remains documented and reproducible.
+
+The longer answer is that you can probably re-build the docker image with the software you want, just make sure to preserve your /home and /etc data.
+
+### Can't I just do this with conda and nb_conda_kernels?
+
+Using conda for environment management is very reasonable, but many analysis pipelines wind up using tools outside of python and conda. Working in a Docker kernel ensures the whole compute environment is captured.
 
 ### Is this running Docker inside of a Docker container?
 
@@ -81,17 +93,21 @@ Sure, just re-run build.sh and this will create a fresh deployment. (It will era
 # To Do:
 
 - [x] Persist user database in Volumes
-- [x] Volume vs bind mount for home directories? (Prob volume bc users won't have access on the native host)
+- [x] Volume mount home directories
 - [x] Script for user setup on creation
 - [x] Upgrade Jupyterhub to 4.0
-- [ ] Install and integrate matlab [Should MATLAB kernel be in a sub-Docker?]
+- [x] Install and integrate matlab
 - [x] Test Dockernel
 - [x] Dockernel GPU support: need to fork the repo to add gpu support in /cli/install.py
 - [x] SSL encryption: Working!
 - [x] Test GPU support: Working! Requires nvidia-container-toolkit installed on host. Base image includes nvidia-smi to verify.
 - [x] Install acl (for setfacl) to maintain permission in /home/share directory
-- [ ] Symlink /home/shared from /home/$USER/shared
-- [ ] Create /home/shared/readonly, set permissions with acl
-- [ ] Clean up kernel locations, sample build files
+- [x] Symlink /home/shared from /home/$USER/shared
+- [ ] Improve dockernel kernel naming
+- [ ] Test alternate values for dockernel arguments (user as name, etc)
+- [ ] Add shared/readonly for data; writable by admin
+- [ ] Example image deploy
+- [ ] R-kernel
+- [ ] Figure out how admin can add users as sudoers and admins
+- [x] Clean up kernel locations, sample build files
 - [ ] Good way to get data in and stored
-- [ ] Documentation 

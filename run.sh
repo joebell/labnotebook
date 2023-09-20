@@ -29,7 +29,8 @@ else
     gpu_option=""
 fi
 
-
+# Get the Docker group ID in the host to match it in the container
+DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
 docker run -it \
     -e "USE_GPU=$USE_GPU" \
     $gpu_option \
@@ -38,6 +39,7 @@ docker run -it \
     -v labnotebook-etc:/etc \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -e "USE_SSL=$USE_SSL" \
+    -e "DOCKER_GROUP_ID=$DOCKER_GROUP_ID" \
     $ssl_cert_option \
     $ssl_key_option \
     labnotebook:latest

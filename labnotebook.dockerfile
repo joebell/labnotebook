@@ -3,9 +3,10 @@ FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install python, pip, wget, git, vim, sudo, lxml dependencies, acl
+# Install python, pip, wget, git, vim, sudo, acl
+# Install latex and xetex for PDF output
 RUN apt-get update
-RUN apt-get install -y python3.10 python3-pip wget git ca-certificates curl gnupg vim sudo acl
+RUN apt-get install -y python3.10 python3-pip wget git ca-certificates curl gnupg vim sudo acl texlive-xetex texlive-fonts-recommended texlive-plain-generic
 
 # Install Docker to allow creation of compute kernels
 RUN install -m 0755 -d /etc/apt/keyrings
@@ -15,8 +16,10 @@ RUN echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/d
 RUN apt-get update
 RUN apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
+# Create a sudo group
 # Give an admin user with sudo privlidges; it will be created at run-time
 RUN echo 'admin ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/admin
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/sudogroup
 
 # Download and install Conda
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh && \
@@ -58,14 +61,18 @@ RUN openssl req -x509 -nodes -newkey rsa:2048 -keyout /etc/jupyterhub/ssl/my_key
 RUN ln -s /build/config/adduser.sh /etc/adduser.sh
 RUN chmod 774 /build/config/adduser.sh
 
-# Setup default groups and permission
+# Setup default groups and permission, shared directory
 RUN groupadd lab
-RUN mkdir /home/share
+COPY ./shared /home/shared
+RUN mkdir /home/shared/readonly
 RUN chown -R :lab /home && chmod -R 755 /home
 RUN chmod g+s /home
-RUN chown -R :lab /home/share && chmod -R 775 /home/share
-RUN chmod g+s /home/share
-RUN setfacl -Rdm g:lab:rwx /home/share
+RUN chown -R :lab /home/shared && chmod -R 775 /home/shared
+RUN chmod g+s /home/shared
+RUN setfacl -Rdm g:lab:rwx /home/shared
+RUN chown -R root:lab /home/shared/readonly
+RUN chmod -R 755 /home/shared/readonly
+RUN setfacl -m u:root:rwX,g:lab:rX /home/shared/readonly
 
 # Expose the Jupyter Notebook port
 EXPOSE 8000
