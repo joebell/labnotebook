@@ -89,7 +89,7 @@ Yes! Each user controls what containers are installed as kernels for themselves,
 - [x] Improve dockernel kernel naming
 - [ ] Test alternate values for dockernel arguments (user as name, etc)
 - [x] Add shared/readonly for data; writable by admin
-- [ ] Example image deploy
+- [x] Example image deploy
 - [ ] R-kernel
 - [x] Figure out how admin can add users as sudoers and admins
 - [x] Clean up kernel locations, sample build files
