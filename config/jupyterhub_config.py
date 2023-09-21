@@ -1523,3 +1523,26 @@ c.Authenticator.manage_groups = False
 #  Default: 4
 # c.CryptKeeper.n_threads = 4
 
+# Configure idle-culler
+#import sys
+#c.JupyterHub.services = [
+#    {
+#        'name': 'idle-culler',
+#        'command': [sys.executable, '-m', 'jupyterhub_idle_culler', '--timeout=60'],
+#    }
+#]
+#
+#c.JupyterHub.load_roles = [
+#    {
+#        "name": "list-and-cull", # name the role
+#        "services": [
+#            "idle-culler", # assign the service to this role
+#        ],
+#        "scopes": [
+#            # declare what permissions the service should have
+#            "list:users", # list users
+#            "read:users:activity", # read user last-activity
+#            "admin:servers", # start/stop servers
+#        ],
+#    }
+#]

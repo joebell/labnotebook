@@ -7,46 +7,60 @@
 #
 #
 
-# Remove any old labnotebook containers
-echo "Deleting old labnotebook container..."
-docker rm -f labnotebook
+# Check if the container named "labnotebook" exists
+if docker ps -a --format '{{.Names}}' | grep -q '^labnotebook$'; then
+    # Stop the container if it is running
+    if docker ps --format '{{.Names}}' | grep -q '^labnotebook$'; then
+        echo "Stopping existing container: labnotebook"
+        docker stop labnotebook
+    fi
+
+    # Remove the container
+    echo "Removing existing container: labnotebook"
+    docker rm -f labnotebook
+else
+    echo "No existing labnotebook container."
+fi
 
 # Build the new container
+echo "Building a labnotebook container..."
 docker build -f ./labnotebook.dockerfile -t labnotebook:latest .
 
-# Check if the Docker volumes exist before over-writing them
-if docker volume inspect labnotebook-homedirs >/dev/null 2>&1; then
-    echo "Docker volume 'labnotebook-homedirs' already exists."
-    echo "Do you want to delete and replace it with a new volume?"
-    read -p "(This will permanently delete all data mounted to /home) (y/n): " answer
-    if [ "$answer" == "y" ]; then
-        echo "Deleting the existing volume..."
-        docker volume rm -f labnotebook-homedirs
-        echo "Creating a new volume..."
-        docker volume create labnotebook-homedirs
-        echo "New volume 'labnotebook-homedirs' created."
-    else
-        echo "Keeping the existing volume 'labnotebook-homedirs'."
-    fi
-else
-    echo "Creating new volume 'labnotebook-homedirs'."
-    docker volume create labnotebook-homedirs
-fi
+# Define a list of Docker volume names
+volume_names=("labnotebook-homedirs" "labnotebook-etc")
 
-if docker volume inspect labnotebook-etc >/dev/null 2>&1; then
-    echo "Docker volume 'labnotebook-etc' already exists."
-    echo "Do you want to delete and replace it with a new volume?"
-    read -p "(This will permanently delete the configuration from /etc) (y/n): " answer
-    if [ "$answer" == "y" ]; then
-        echo "Deleting the existing volume..."
-        docker volume rm -f labnotebook-etc
-        echo "Creating a new volume..."
-        docker volume create labnotebook-etc
-        echo "New volume 'labnotebook-etc' created."
+# Loop through each volume in the list
+for volume_name in "${volume_names[@]}"; do
+    # Check if the volume exists
+    if docker volume inspect "$volume_name" &> /dev/null; then
+        echo "Volume '$volume_name' exists."
+
+        # Ask the user if they want to delete and replace the volume
+        read -p "Do you want to delete and replace this volume? (y/n): " choice
+        if [ "$choice" == "y" ]; then
+            # Query Docker for containers using the volume
+            containers=$(docker ps -a --filter "volume=$volume_name" --format '{{.ID}}')
+            
+            # Stop and remove containers using the volume
+            for container_id in $containers; do
+                echo "Stopping and removing container: $container_id"
+                docker stop "$container_id"
+                docker rm -f "$container_id"
+            done
+
+            # Remove the volume
+            echo "Removing volume: $volume_name"
+            docker volume rm -f "$volume_name"
+
+            # Create a new volume with the same name
+            echo "Creating a new volume: $volume_name"
+            docker volume create "$volume_name"
+        else
+            echo "Retaining existing volume: $volume_name."
+        fi
     else
-        echo "Keeping the existing volume 'labnotebook-etc'."
+        echo "Creating a new volume: $volume_name"
+        docker volume create "$volume_name"
     fi
-else
-    echo "Creating new volume 'labnotebook-etc'."
-    docker volume create labnotebook-etc
-fi
+done
+

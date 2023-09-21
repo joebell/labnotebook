@@ -12,5 +12,6 @@ dependencies:
   - pandoc=2.12
   - pip:
     - jupyterhub-nativeauthenticator==1.2.0
+      #    - jupyterhub-idle-culler==1.2.1
     - git+https://github.com/joebell/dockernel.git
 

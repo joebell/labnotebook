@@ -75,25 +75,6 @@ Yes! Each user controls what containers are installed as kernels for themselves,
 
 # To Do:
 
-- [x] Persist user database in Volumes
-- [x] Volume mount home directories
-- [x] Script for user setup on creation
-- [x] Upgrade Jupyterhub to 4.0
-- [x] Install and integrate matlab
-- [x] Test Dockernel
-- [x] Dockernel GPU support: need to fork the repo to add gpu support in /cli/install.py
-- [x] SSL encryption: Working!
-- [x] Test GPU support: Working! Requires nvidia-container-toolkit installed on host. Base image includes nvidia-smi to verify.
 - [ ] Test on non-GPU host
-- [x] Install acl (for setfacl) to maintain permission in /home/share directory
-- [x] Symlink /home/shared from /home/$USER/shared
-- [x] Improve dockernel kernel naming
 - [ ] Test alternate values for dockernel arguments (user as name, etc)
-- [x] Add shared/readonly for data; writable by admin
-- [x] Example image deploy
-- [x] R-kernel
-- [x] Figure out how admin can add users as sudoers and admins
-- [x] Clean up kernel locations, sample build files
 - [ ] Cull idle kernels
-- [ ] Restart after stopped
-- [ ] Figure out --init flag
