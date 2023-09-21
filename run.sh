@@ -37,7 +37,7 @@ fi
 
 # Get the Docker group ID in the host to match it in the container
 DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
-DOCKER_RUN_COMMAND="docker run \
+DOCKER_RUN_COMMAND="docker run -d \
     --init \
     --restart unless-stopped \
     --name labnotebook \
