@@ -14,5 +14,3 @@ dependencies:
     - jupyterhub-nativeauthenticator==1.2.0
     - git+https://github.com/joebell/dockernel.git
 
-#############
-

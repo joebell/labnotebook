@@ -37,7 +37,9 @@ fi
 
 # Get the Docker group ID in the host to match it in the container
 DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
-docker run -it \
+DOCKER_RUN_COMMAND="docker run \
+    --init \
+    --restart unless-stopped \
     --name labnotebook \
     -e "USE_GPU=$USE_GPU" \
     $gpu_option \
@@ -49,5 +51,26 @@ docker run -it \
     -e "DOCKER_GROUP_ID=$DOCKER_GROUP_ID" \
     $ssl_cert_option \
     $ssl_key_option \
-    labnotebook:latest
+    labnotebook:latest"
+
+
+# Check if a container named "labnotebook" exists
+if docker ps -a --format '{{.Names}}' | grep -q '^labnotebook$'; then
+    echo "A container named 'labnotebook' already exists."
+    read -p "Do you want to restart it? (y/n): " choice
+    if [ "$choice" == "y" ]; then
+        docker start labnotebook
+        echo "Container 'labnotebook' has been restarted."
+    else
+        # Remove the existing container
+        docker rm labnotebook
+        echo "Container 'labnotebook' has been removed."
+
+        # Start a new container
+        eval $DOCKER_RUN_COMMAND
+    fi
+else
+    # Container does not exist, so start a new one
+    eval $DOCKER_RUN_COMMAND
+fi
 

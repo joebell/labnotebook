@@ -94,3 +94,6 @@ Yes! Each user controls what containers are installed as kernels for themselves,
 - [x] R-kernel
 - [x] Figure out how admin can add users as sudoers and admins
 - [x] Clean up kernel locations, sample build files
+- [ ] Cull idle kernels
+- [ ] Restart after stopped
+- [ ] Figure out --init flag
