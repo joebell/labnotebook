@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install python, pip, wget, git, vim, sudo, acl
 # Install latex and xetex for PDF output
 RUN apt-get update
-RUN apt-get install -y python3.10 python3-pip wget git ca-certificates curl gnupg vim sudo acl texlive-xetex texlive-fonts-recommended texlive-plain-generic screen
+RUN apt-get install -y python3.10 python3-pip wget git ca-certificates curl gnupg vim sudo acl texlive-xetex texlive-fonts-recommended texlive-plain-generic 
 
 # Install Docker to allow creation of compute kernels
 RUN install -m 0755 -d /etc/apt/keyrings

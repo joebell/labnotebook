@@ -32,9 +32,10 @@ You should configure SSL certificates to allow users to authenticate the server.
 ## Installation and setup
 
 - Install Docker
-- Optional: Install NVIDIA drivers and nvidia-container-toolkit
-- Run build.sh to create the container (and container volumes to store data)
-- Run run.sh to run the service
+- Optional: Install NVIDIA drivers and nvidia-container-toolkit for GPU support
+- Optional: Edit the `run` script to include the paths to your SSL certificates
+- Run `build <server_name>` to create the container (and container volumes to store data)
+- Run `run <server_name>` to run the service
 - Navigate to https://[your.ip.address]:8000 
 - Click the 'Sign up to create a new user' link to create a new user: the first user must be named `admin`. Set a password.
 - After creating the user, choose 'Login with an existing user' and login as the admin user. This will create the admin account, which will have administrative privliges in JupyterHub, and `sudo` privliges.
@@ -81,4 +82,3 @@ Yes! Each user controls what containers are installed as kernels for themselves,
 - [ ] Have dockernel set the directory to run kernel in?
 - [ ] Cull idle kernels (this appears hard)
 - [ ] Install screen
-- [ ] Adjust script to allow different labnotebook hosts
