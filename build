@@ -17,24 +17,7 @@ fi
 # Store the first argument in the SERVER_NAME variable
 SERVER_NAME="$1"
 
-# Check if the container named "labnotebook" exists
-if docker ps -a -q -f "name=$SERVER_NAME" | grep -q .; then
-    # Stop the container if it is running
-    if docker ps -q -f "name=$SERVER_NAME" | grep -q .; then
-        echo "Stopping existing container: $SERVER_NAME"
-        docker stop $SERVER_NAME
-    fi
-
-    # Remove the container
-    echo "Removing existing container: $SERVER_NAME"
-    docker rm -f $SERVER_NAME
-else
-    echo "No existing $SERVER_NAME container."
-fi
-
-# Build the new container
-echo "Building a labnotebook container as $SERVER_NAME..."
-docker build -f ./labnotebook.dockerfile -t $SERVER_NAME:latest .
+# Build the volumes needed
 
 # Define a list of Docker volume names
 volume_names=("$SERVER_NAME-homedirs" "$SERVER_NAME-etc")
@@ -74,3 +57,24 @@ for volume_name in "${volume_names[@]}"; do
     fi
 done
 
+
+# Build the container...
+
+# Check if the container named "labnotebook" exists
+if docker ps -a -q -f "name=$SERVER_NAME" | grep -q .; then
+    # Stop the container if it is running
+    if docker ps -q -f "name=$SERVER_NAME" | grep -q .; then
+        echo "Stopping existing container: $SERVER_NAME"
+        docker stop $SERVER_NAME
+    fi
+
+    # Remove the container
+    echo "Removing existing container: $SERVER_NAME"
+    docker rm -f $SERVER_NAME
+else
+    echo "No existing $SERVER_NAME container."
+fi
+
+# Build the new container
+echo "Building a labnotebook container as $SERVER_NAME..."
+docker build -f ./labnotebook.dockerfile -t $SERVER_NAME:latest .
