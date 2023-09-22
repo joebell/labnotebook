@@ -77,4 +77,8 @@ Yes! Each user controls what containers are installed as kernels for themselves,
 
 - [ ] Test on non-GPU host
 - [ ] Test alternate values for dockernel arguments (user as name, etc)
-- [ ] Cull idle kernels
+- [ ] Dockernel bind mounts
+- [ ] Have dockernel set the directory to run kernel in?
+- [ ] Cull idle kernels (this appears hard)
+- [ ] Install screen
+- [ ] Adjust script to allow different labnotebook hosts

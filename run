@@ -6,9 +6,23 @@
 #
 #
 
+########################################################
+
 # Place paths to SSL cert and key here
+# IF you don't have them, then leave th string blank: ""
 ssl_cert="/etc/ssl/gait_mednet_ucla_edu.pem"
 ssl_key="/etc/ssl/private/gait.mednet.ucla.edu.key"
+
+#########################################################
+
+# Check if an argument was provided
+if [ $# -eq 0 ]; then
+  echo "Usage: $0 <server_name>"
+  exit 1
+fi
+
+# Store the first argument in the SERVER_NAME variable
+SERVER_NAME="$1"
 
 
 # Check if either ssl_cert or ssl_key is empty
@@ -40,31 +54,31 @@ DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
 DOCKER_RUN_COMMAND="docker run -d \
     --init \
     --restart unless-stopped \
-    --name labnotebook \
+    --name $SERVER_NAME \
     -e "USE_GPU=$USE_GPU" \
     $gpu_option \
     --network=host \
-    -v labnotebook-homedirs:/home \
-    -v labnotebook-etc:/etc \
+    -v $SERVER_NAME-homedirs:/home \
+    -v $SERVER_NAME-etc:/etc \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -e "USE_SSL=$USE_SSL" \
     -e "DOCKER_GROUP_ID=$DOCKER_GROUP_ID" \
     $ssl_cert_option \
     $ssl_key_option \
-    labnotebook:latest"
+    $SERVER_NAME:latest"
 
 
 # Check if a container named "labnotebook" exists
-if docker ps -a --format '{{.Names}}' | grep -q '^labnotebook$'; then
-    echo "A container named 'labnotebook' already exists."
+if docker ps -a -q -f "name=$SERVER_NAME" | grep -q .; then
+    echo "A container named $SERVER_NAME already exists."
     read -p "Do you want to restart it? (y/n): " choice
     if [ "$choice" == "y" ]; then
-        docker start labnotebook
-        echo "Container 'labnotebook' has been restarted."
+        docker start $SERVER_NAME
+        echo "Container $SERVER_NAME has been restarted."
     else
         # Remove the existing container
-        docker rm labnotebook
-        echo "Container 'labnotebook' has been removed."
+        docker rm $SERVER_NAME
+        echo "Container $SERVER_NAME has been removed."
 
         # Start a new container
         eval $DOCKER_RUN_COMMAND
