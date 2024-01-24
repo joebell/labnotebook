@@ -14,4 +14,5 @@ dependencies:
     - jupyterhub-nativeauthenticator==1.2.0
       #    - jupyterhub-idle-culler==1.2.1
     - git+https://github.com/joebell/dockernel.git
+    - jupyterlab-spreadsheet-editor==0.6.1
 
